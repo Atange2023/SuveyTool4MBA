@@ -1,14 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
-import {
-  ChartBar as BarChart3, FileText, ClipboardList, Lightbulb, Share2,
-  TrendingUp, ChartBar as FileBarChart, ChevronRight,
-  CircleCheck as CheckCircle2, Circle, Plus, Trash2, Eye, Copy, ArrowRight,
-} from 'lucide-react';
+import { ChartBar as BarChart3, FileText, ClipboardList, Lightbulb, Share2, TrendingUp, ChartBar as FileBarChart, ChevronRight, CircleCheck as CheckCircle2, Circle, Plus, Trash2, Eye, Copy, ArrowRight, Hop as Home } from 'lucide-react';
 import { Card } from './components/shared/Card';
 import { Badge } from './components/shared/Badge';
 import { MetricCard } from './components/shared/MetricCard';
 import { PathDiagram } from './components/analysis/PathDiagram';
 import { ReportCharts } from './components/report/ReportCharts';
+import { HomePage } from './components/HomePage';
 import { runFullAnalysis } from './lib/pls-sem';
 import type { FullAnalysisResult, ModelConfig } from './lib/pls-sem/types';
 import type { WorkflowStep, Hypothesis } from './types';
@@ -16,6 +13,8 @@ import {
   EXAMPLE_PROJECT, EXAMPLE_CONSTRUCTS, EXAMPLE_INDICATORS,
   getExampleModelConfig, generateExampleData,
 } from './data/example';
+
+type AppView = 'home' | 'example' | 'new-project';
 
 const STEPS: { key: WorkflowStep; label: string; icon: typeof BarChart3 }[] = [
   { key: 'overview', label: '项目总览', icon: BarChart3 },
@@ -28,6 +27,7 @@ const STEPS: { key: WorkflowStep; label: string; icon: typeof BarChart3 }[] = [
 ];
 
 export default function App() {
+  const [view, setView] = useState<AppView>('home');
   const [step, setStep] = useState<WorkflowStep>('overview');
   const [title] = useState(EXAMPLE_PROJECT.title);
   const [description] = useState(EXAMPLE_PROJECT.description);
@@ -57,6 +57,19 @@ export default function App() {
     }, 100);
   }, [exampleData, modelConfig]);
 
+  if (view === 'home') {
+    return (
+      <HomePage
+        onOpenExample={() => { setView('example'); setStep('overview'); }}
+        onCreateNew={() => setView('new-project')}
+      />
+    );
+  }
+
+  if (view === 'new-project') {
+    return <NewProjectPlaceholder onBack={() => setView('home')} />;
+  }
+
   return (
     <div className="min-h-screen bg-notion-bg flex">
       {/* Sidebar */}
@@ -69,6 +82,10 @@ export default function App() {
             <span className="text-[13px] font-semibold text-notion-text tracking-tight">量研通</span>
           </div>
         </div>
+
+        <button onClick={() => setView('home')} className="mx-2 mt-2 flex items-center gap-2 px-2 py-1.5 rounded text-[12px] text-notion-text-secondary hover:bg-notion-bg-hover/60 transition-colors">
+          <Home className="w-3.5 h-3.5" /> 返回首页
+        </button>
 
         <div className="px-2 mt-2">
           <p className="px-2 py-1 text-[11px] font-medium text-notion-text-tertiary uppercase tracking-wider">工作流</p>
@@ -1078,6 +1095,59 @@ function ReportPanel({ result, modelConfig, title, researchQuestion, hypotheses 
           </div>
         </Card>
       </div>
+    </div>
+  );
+}
+
+function NewProjectPlaceholder({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="min-h-screen bg-notion-bg">
+      <header className="border-b border-notion-border-light">
+        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 bg-notion-text rounded flex items-center justify-center">
+              <BarChart3 className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="text-[13px] font-semibold text-notion-text tracking-tight">量研通</span>
+          </div>
+          <button onClick={onBack} className="flex items-center gap-1.5 text-[12px] text-notion-text-secondary hover:text-notion-text transition-colors">
+            <Home className="w-3.5 h-3.5" /> 返回首页
+          </button>
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto px-6 py-20">
+        <div className="flex flex-col items-center text-center">
+          <div className="w-14 h-14 rounded-xl bg-notion-bg-tertiary flex items-center justify-center mb-6">
+            <Plus className="w-7 h-7 text-notion-text-tertiary" />
+          </div>
+          <h1 className="text-2xl font-bold text-notion-text tracking-tight mb-2">新建研究项目</h1>
+          <p className="text-[14px] text-notion-text-secondary leading-relaxed max-w-md mb-8">
+            此功能正在开发中。你很快就可以在这里创建自己的研究项目，定义课题、构念和假设，并完成完整的量化研究流程。
+          </p>
+          <div className="p-5 bg-notion-bg-tertiary rounded-lg w-full max-w-sm text-left">
+            <p className="text-[13px] font-medium text-notion-text mb-3">即将支持：</p>
+            <ul className="text-[12px] text-notion-text-secondary space-y-2">
+              <li className="flex items-center gap-2">
+                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 自定义研究课题与描述
+              </li>
+              <li className="flex items-center gap-2">
+                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 自由定义构念和假设关系
+              </li>
+              <li className="flex items-center gap-2">
+                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 设计并发布自定义问卷
+              </li>
+              <li className="flex items-center gap-2">
+                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 收集真实数据并运行分析
+              </li>
+            </ul>
+          </div>
+          <button onClick={onBack}
+            className="mt-8 inline-flex items-center gap-1.5 px-4 py-2 bg-notion-text text-white rounded text-[13px] font-medium hover:bg-notion-text/90 transition-colors">
+            <ArrowRight className="w-3.5 h-3.5 rotate-180" /> 返回首页
+          </button>
+        </div>
+      </main>
     </div>
   );
 }

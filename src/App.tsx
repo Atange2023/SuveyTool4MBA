@@ -29,8 +29,8 @@ const STEPS: { key: WorkflowStep; label: string; icon: typeof BarChart3 }[] = [
 export default function App() {
   const [view, setView] = useState<AppView>('home');
   const [step, setStep] = useState<WorkflowStep>('overview');
-  const [title] = useState(EXAMPLE_PROJECT.title);
-  const [description] = useState(EXAMPLE_PROJECT.description);
+  const [title, setTitle] = useState(EXAMPLE_PROJECT.title);
+  const [description, setDescription] = useState(EXAMPLE_PROJECT.description);
   const [researchQuestion, setResearchQuestion] = useState(EXAMPLE_PROJECT.research_question);
   const [hypotheses, setHypotheses] = useState<Hypothesis[]>(EXAMPLE_PROJECT.hypotheses);
   const [constructs, setConstructs] = useState(EXAMPLE_CONSTRUCTS);
@@ -40,12 +40,54 @@ export default function App() {
   const [analysisResult, setAnalysisResult] = useState<FullAnalysisResult | null>(null);
   const [analysisTab, setAnalysisTab] = useState<'desc' | 'reliability' | 'validity' | 'structural' | 'bootstrap'>('desc');
   const [analyzing, setAnalyzing] = useState(false);
-  const [responseCount] = useState(150);
+  const [responseCount, setResponseCount] = useState(150);
   const [deadline, setDeadline] = useState('2026-05-01');
   const [copied, setCopied] = useState(false);
 
-  const modelConfig = useMemo(() => getExampleModelConfig(), []);
+  const isNewProject = view === 'new-project';
+
+  const modelConfig = useMemo<ModelConfig>(() => {
+    if (constructs.length === 0) return { constructs: [], paths: [] };
+    let idx = 0;
+    const configConstructs = constructs.map(c => {
+      const matching = indicators.filter(ind => ind.construct === c.name);
+      const indices = matching.map((_, i) => idx + i);
+      idx += matching.length;
+      return { name: c.name, type: c.type, indicatorIndices: indices };
+    });
+    const paths = hypotheses.map(h => ({ from: h.from, to: h.to }));
+    return { constructs: configConstructs, paths };
+  }, [constructs, indicators, hypotheses]);
+
   const exampleData = useMemo(() => generateExampleData(150), []);
+
+  const resetToBlank = useCallback(() => {
+    setTitle('');
+    setDescription('');
+    setResearchQuestion('');
+    setHypotheses([]);
+    setConstructs([]);
+    setIndicators([]);
+    setSurveyActive(false);
+    setSurveyPreview(false);
+    setAnalysisResult(null);
+    setAnalysisTab('desc');
+    setResponseCount(0);
+    setStep('overview');
+  }, []);
+
+  const restoreExample = useCallback(() => {
+    setTitle(EXAMPLE_PROJECT.title);
+    setDescription(EXAMPLE_PROJECT.description);
+    setResearchQuestion(EXAMPLE_PROJECT.research_question);
+    setHypotheses(EXAMPLE_PROJECT.hypotheses);
+    setConstructs(EXAMPLE_CONSTRUCTS);
+    setIndicators(EXAMPLE_INDICATORS);
+    setAnalysisResult(null);
+    setSurveyActive(false);
+    setResponseCount(150);
+    setStep('overview');
+  }, []);
 
   const runAnalysis = useCallback(() => {
     setAnalyzing(true);
@@ -60,14 +102,10 @@ export default function App() {
   if (view === 'home') {
     return (
       <HomePage
-        onOpenExample={() => { setView('example'); setStep('overview'); }}
-        onCreateNew={() => setView('new-project')}
+        onOpenExample={() => { restoreExample(); setView('example'); }}
+        onCreateNew={() => { resetToBlank(); setView('new-project'); }}
       />
     );
-  }
-
-  if (view === 'new-project') {
-    return <NewProjectPlaceholder onBack={() => setView('home')} />;
   }
 
   return (
@@ -121,9 +159,11 @@ export default function App() {
 
         <div className="px-3 py-3 border-t border-notion-border-light">
           <div className="px-2 py-2 bg-notion-bg-tertiary rounded">
-            <p className="text-[11px] font-medium text-notion-text-secondary">示例项目</p>
+            <p className="text-[11px] font-medium text-notion-text-secondary">
+              {isNewProject ? '我的项目' : '示例项目'}
+            </p>
             <p className="text-[11px] text-notion-text-tertiary mt-0.5 leading-snug">
-              OpenClaw AI Agent 调研
+              {title || '未命名项目'}
             </p>
           </div>
         </div>
@@ -133,7 +173,7 @@ export default function App() {
       <main className="flex-1 min-w-0">
         <header className="h-11 flex items-center px-4 lg:px-8 border-b border-notion-border-light sticky top-0 z-10 bg-notion-bg/95 backdrop-blur-sm">
           <div className="flex items-center gap-1.5 text-[13px]">
-            <span className="text-notion-text-secondary">{title}</span>
+            <span className="text-notion-text-secondary">{title || '未命名项目'}</span>
             <ChevronRight className="w-3 h-3 text-notion-text-tertiary" />
             <span className="text-notion-text font-medium">{STEPS.find(s => s.key === step)?.label}</span>
           </div>
@@ -144,6 +184,7 @@ export default function App() {
             title={title} description={description} constructs={constructs}
             indicators={indicators} hypotheses={hypotheses}
             responseCount={responseCount} onNavigate={setStep}
+            editable={isNewProject} setTitle={setTitle} setDescription={setDescription}
           />}
           {step === 'research' && <ResearchPanel
             researchQuestion={researchQuestion} setResearchQuestion={setResearchQuestion}
@@ -166,6 +207,7 @@ export default function App() {
             deadline={deadline} setDeadline={setDeadline}
             responseCount={responseCount} onAnalyze={runAnalysis}
             copied={copied} setCopied={setCopied}
+            canAnalyze={responseCount > 0 && constructs.length >= 2}
           />}
           {step === 'analysis' && <AnalysisPanel
             result={analysisResult} modelConfig={modelConfig}
@@ -208,10 +250,11 @@ function NextBtn({ onClick, label = '下一步', disabled }: { onClick: () => vo
 }
 
 /* ─────────── Overview ─────────── */
-function OverviewPanel({ title, description, constructs, indicators, hypotheses, responseCount, onNavigate }: {
+function OverviewPanel({ title, description, constructs, indicators, hypotheses, responseCount, onNavigate, editable, setTitle, setDescription }: {
   title: string; description: string; constructs: typeof EXAMPLE_CONSTRUCTS;
   indicators: typeof EXAMPLE_INDICATORS; hypotheses: Hypothesis[];
   responseCount: number; onNavigate: (s: WorkflowStep) => void;
+  editable?: boolean; setTitle?: (v: string) => void; setDescription?: (v: string) => void;
 }) {
   const stats = [
     { label: '构念', value: constructs.length, accent: '#2eaadc' },
@@ -222,7 +265,25 @@ function OverviewPanel({ title, description, constructs, indicators, hypotheses,
 
   return (
     <div className="animate-fade-in">
-      <PageTitle sub={description}>{title}</PageTitle>
+      {editable ? (
+        <div className="mb-8">
+          <input
+            value={title}
+            onChange={e => setTitle?.(e.target.value)}
+            placeholder="输入项目标题..."
+            className="text-2xl font-bold text-notion-text tracking-tight leading-tight bg-transparent focus:outline-none w-full placeholder:text-notion-text-tertiary border-b border-transparent focus:border-notion-border transition-colors pb-1"
+          />
+          <textarea
+            value={description}
+            onChange={e => setDescription?.(e.target.value)}
+            placeholder="输入项目描述（研究背景、理论框架等）..."
+            rows={2}
+            className="text-[13px] text-notion-text-secondary mt-2 bg-transparent focus:outline-none w-full resize-none placeholder:text-notion-text-tertiary"
+          />
+        </div>
+      ) : (
+        <PageTitle sub={description}>{title}</PageTitle>
+      )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-10">
         {stats.map(s => (
@@ -567,17 +628,18 @@ function SuggestionsPanel({ researchQuestion, constructs, hypotheses, indicatorC
 }
 
 /* ─────────── Publish ─────────── */
-function PublishPanel({ surveyActive, setSurveyActive, deadline, setDeadline, responseCount, onAnalyze, copied, setCopied }: {
+function PublishPanel({ surveyActive, setSurveyActive, deadline, setDeadline, responseCount, onAnalyze, copied, setCopied, canAnalyze = true }: {
   surveyActive: boolean; setSurveyActive: (v: boolean) => void;
   deadline: string; setDeadline: (v: string) => void;
   responseCount: number;
   onAnalyze: () => void; copied: boolean; setCopied: (v: boolean) => void;
+  canAnalyze?: boolean;
 }) {
   const shareUrl = `${window.location.origin}/survey/abc123`;
 
   return (
     <div className="animate-fade-in">
-      <PageTitle sub="生成分享链接，收集调研对象的回复" right={<NextBtn onClick={onAnalyze} label="数据分析" />}>
+      <PageTitle sub="生成分享链接，收集调研对象的回复" right={<NextBtn onClick={onAnalyze} label="数据分析" disabled={!canAnalyze} />}>
         发布与收集
       </PageTitle>
 
@@ -1099,55 +1161,3 @@ function ReportPanel({ result, modelConfig, title, researchQuestion, hypotheses 
   );
 }
 
-function NewProjectPlaceholder({ onBack }: { onBack: () => void }) {
-  return (
-    <div className="min-h-screen bg-notion-bg">
-      <header className="border-b border-notion-border-light">
-        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-notion-text rounded flex items-center justify-center">
-              <BarChart3 className="w-3.5 h-3.5 text-white" />
-            </div>
-            <span className="text-[13px] font-semibold text-notion-text tracking-tight">量研通</span>
-          </div>
-          <button onClick={onBack} className="flex items-center gap-1.5 text-[12px] text-notion-text-secondary hover:text-notion-text transition-colors">
-            <Home className="w-3.5 h-3.5" /> 返回首页
-          </button>
-        </div>
-      </header>
-
-      <main className="max-w-2xl mx-auto px-6 py-20">
-        <div className="flex flex-col items-center text-center">
-          <div className="w-14 h-14 rounded-xl bg-notion-bg-tertiary flex items-center justify-center mb-6">
-            <Plus className="w-7 h-7 text-notion-text-tertiary" />
-          </div>
-          <h1 className="text-2xl font-bold text-notion-text tracking-tight mb-2">新建研究项目</h1>
-          <p className="text-[14px] text-notion-text-secondary leading-relaxed max-w-md mb-8">
-            此功能正在开发中。你很快就可以在这里创建自己的研究项目，定义课题、构念和假设，并完成完整的量化研究流程。
-          </p>
-          <div className="p-5 bg-notion-bg-tertiary rounded-lg w-full max-w-sm text-left">
-            <p className="text-[13px] font-medium text-notion-text mb-3">即将支持：</p>
-            <ul className="text-[12px] text-notion-text-secondary space-y-2">
-              <li className="flex items-center gap-2">
-                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 自定义研究课题与描述
-              </li>
-              <li className="flex items-center gap-2">
-                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 自由定义构念和假设关系
-              </li>
-              <li className="flex items-center gap-2">
-                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 设计并发布自定义问卷
-              </li>
-              <li className="flex items-center gap-2">
-                <Circle className="w-3.5 h-3.5 text-notion-text-tertiary flex-shrink-0" /> 收集真实数据并运行分析
-              </li>
-            </ul>
-          </div>
-          <button onClick={onBack}
-            className="mt-8 inline-flex items-center gap-1.5 px-4 py-2 bg-notion-text text-white rounded text-[13px] font-medium hover:bg-notion-text/90 transition-colors">
-            <ArrowRight className="w-3.5 h-3.5 rotate-180" /> 返回首页
-          </button>
-        </div>
-      </main>
-    </div>
-  );
-}

@@ -1,98 +1,137 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-50: #eff8ff;
-  --color-primary-100: #dbeefe;
-  --color-primary-200: #bfdffd;
-  --color-primary-300: #93cbfb;
-  --color-primary-400: #60aef8;
-  --color-primary-500: #3b8ff3;
-  --color-primary-600: #2570e8;
-  --color-primary-700: #1d5bd5;
-  --color-primary-800: #1e4aad;
-  --color-primary-900: #1e4188;
-  --color-primary-950: #172953;
+  --color-primary-50: #f0f5ff;
+  --color-primary-100: #e0ebff;
+  --color-primary-200: #c7d7fe;
+  --color-primary-300: #a4bcfc;
+  --color-primary-400: #7c9cf8;
+  --color-primary-500: #5b7bf2;
+  --color-primary-600: #4263e8;
+  --color-primary-700: #3451cc;
+  --color-primary-800: #2d44a5;
+  --color-primary-900: #293d82;
+  --color-primary-950: #1b264f;
 
-  --color-secondary-50: #f0fdf4;
-  --color-secondary-100: #dcfce7;
-  --color-secondary-200: #bbf7d0;
-  --color-secondary-300: #86efac;
-  --color-secondary-400: #4ade80;
-  --color-secondary-500: #22c55e;
-  --color-secondary-600: #16a34a;
-  --color-secondary-700: #15803d;
-  --color-secondary-800: #166534;
-  --color-secondary-900: #14532d;
-  --color-secondary-950: #052e16;
+  --color-secondary-50: #f3faf3;
+  --color-secondary-100: #e3f5e3;
+  --color-secondary-200: #c8eac8;
+  --color-secondary-300: #9dd89d;
+  --color-secondary-400: #6abf6a;
+  --color-secondary-500: #46a046;
+  --color-secondary-600: #358435;
+  --color-secondary-700: #2d692d;
+  --color-secondary-800: #285328;
+  --color-secondary-900: #234523;
+  --color-secondary-950: #0f250f;
 
-  --color-accent-50: #fff7ed;
-  --color-accent-100: #ffedd5;
-  --color-accent-200: #fed7aa;
-  --color-accent-300: #fdba74;
-  --color-accent-400: #fb923c;
-  --color-accent-500: #f97316;
-  --color-accent-600: #ea580c;
-  --color-accent-700: #c2410c;
-  --color-accent-800: #9a3412;
-  --color-accent-900: #7c2d12;
-  --color-accent-950: #431407;
+  --color-accent-50: #fff8f0;
+  --color-accent-100: #ffefd9;
+  --color-accent-200: #ffddb3;
+  --color-accent-300: #ffc580;
+  --color-accent-400: #ffa64d;
+  --color-accent-500: #f08c28;
+  --color-accent-600: #d97218;
+  --color-accent-700: #b45914;
+  --color-accent-800: #904717;
+  --color-accent-900: #763c16;
+  --color-accent-950: #401d09;
 
-  --color-danger-50: #fef2f2;
-  --color-danger-100: #fee2e2;
-  --color-danger-200: #fecaca;
-  --color-danger-300: #fca5a5;
-  --color-danger-400: #f87171;
-  --color-danger-500: #ef4444;
-  --color-danger-600: #dc2626;
-  --color-danger-700: #b91c1c;
-  --color-danger-800: #991b1b;
-  --color-danger-900: #7f1d1d;
-  --color-danger-950: #450a0a;
+  --color-danger-50: #fef5f5;
+  --color-danger-100: #fde8e8;
+  --color-danger-200: #fbd5d5;
+  --color-danger-300: #f8b4b4;
+  --color-danger-400: #f38383;
+  --color-danger-500: #e95656;
+  --color-danger-600: #d53939;
+  --color-danger-700: #b32a2a;
+  --color-danger-800: #942626;
+  --color-danger-900: #7b2525;
+  --color-danger-950: #430f0f;
 
-  --color-warning-50: #fffbeb;
-  --color-warning-100: #fef3c7;
-  --color-warning-200: #fde68a;
-  --color-warning-300: #fcd34d;
-  --color-warning-400: #fbbf24;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-  --color-warning-700: #b45309;
-  --color-warning-800: #92400e;
-  --color-warning-900: #78350f;
-  --color-warning-950: #451a03;
+  --color-warning-50: #fffcf0;
+  --color-warning-100: #fff6d4;
+  --color-warning-200: #ffeca8;
+  --color-warning-300: #ffdd70;
+  --color-warning-400: #ffc836;
+  --color-warning-500: #f0ae0e;
+  --color-warning-600: #d48a06;
+  --color-warning-700: #aa6409;
+  --color-warning-800: #8a4f10;
+  --color-warning-900: #724111;
+  --color-warning-950: #432106;
 
-  --color-success-50: #f0fdf4;
-  --color-success-100: #dcfce7;
-  --color-success-200: #bbf7d0;
-  --color-success-300: #86efac;
-  --color-success-400: #4ade80;
-  --color-success-500: #22c55e;
-  --color-success-600: #16a34a;
-  --color-success-700: #15803d;
-  --color-success-800: #166534;
-  --color-success-900: #14532d;
-  --color-success-950: #052e16;
+  --color-success-50: #f3faf3;
+  --color-success-100: #e3f5e3;
+  --color-success-200: #c8eac8;
+  --color-success-300: #9dd89d;
+  --color-success-400: #6abf6a;
+  --color-success-500: #46a046;
+  --color-success-600: #358435;
+  --color-success-700: #2d692d;
+  --color-success-800: #285328;
+  --color-success-900: #234523;
+  --color-success-950: #0f250f;
 
-  --font-sans: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  --color-notion-bg: #ffffff;
+  --color-notion-bg-secondary: #fbfbfa;
+  --color-notion-bg-tertiary: #f7f6f3;
+  --color-notion-bg-hover: #efefee;
+  --color-notion-text: #37352f;
+  --color-notion-text-secondary: #787774;
+  --color-notion-text-tertiary: #9b9a97;
+  --color-notion-border: #e9e9e7;
+  --color-notion-border-light: #f0efed;
+  --color-notion-accent: #2eaadc;
+  --color-notion-accent-bg: #d3e5ef;
+
+  --font-sans: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
 }
 
 @layer base {
   html {
     font-size: 16px;
-    line-height: 1.5;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
   }
   body {
-    @apply bg-gray-50 text-gray-900 min-h-screen;
+    background-color: var(--color-notion-bg);
+    color: var(--color-notion-text);
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background-color: var(--color-notion-accent-bg);
+  }
+
+  input, textarea, select {
+    letter-spacing: -0.01em;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d1d0cd;
+    border-radius: 100px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b0afac;
   }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.3s ease-in-out;
+  animation: fadeIn 0.2s ease-out;
 }
 .animate-slide-up {
-  animation: slideUp 0.4s ease-out;
+  animation: slideUp 0.3s ease-out;
 }
 
 @keyframes fadeIn {
@@ -100,6 +139,6 @@
   to { opacity: 1; }
 }
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }

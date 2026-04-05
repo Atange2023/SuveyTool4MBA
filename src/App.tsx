@@ -519,7 +519,7 @@ function SurveyDesignPanel({ constructs, indicators, setIndicators, onNext, surv
                 <p className="text-[12px] text-notion-text-tertiary">{c.description} -- {cInds(c.name).length} 个题目</p>
               </div>
               <button onClick={() => {
-                const code = `NEW${cInds(c.name).length + 1}`;
+                const code = `${c.name.slice(0, 2).toUpperCase()}_${Date.now().toString(36)}`;
                 setIndicators([...indicators, { code, question_text: '', construct: c.name, scale_points: 7 }]);
               }} className="flex items-center gap-1 text-[12px] text-notion-text-secondary hover:text-notion-text transition-colors">
                 <Plus className="w-3.5 h-3.5" /> 添加

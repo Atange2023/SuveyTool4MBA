@@ -10,9 +10,9 @@ const WORKFLOW_STEPS = [
 ];
 
 const ROADMAP = [
-  { version: '当前', items: ['AI 提示词生成（故事转模型）', '红绿灯数据体检系统', '董事会级报告生成器', 'CSV 数据导入', 'PLS-SEM 全流程分析'] },
-  { version: '规划中', items: ['接入 LLM API 实现端到端自动化', '智能算法路由（T检验/ANOVA/卡方自动匹配）', '数据类型自动嗅探', '多组分析 (MGA)', '中介/调节效应专项分析'] },
-  { version: '远期', items: ['团队协作与项目共享', '在线问卷收集系统', '多语言支持', '更多统计方法（CB-SEM、fsQCA）'] },
+  { version: '近期规划', items: ['接入 LLM API，实现站内自动生成研究模型与董事会报告', '智能算法路由（T检验 / ANOVA / 卡方自动匹配）', '数据类型自动嗅探', '多组分析 (MGA)', '中介 / 调节效应专项分析'] },
+  { version: '中期规划', items: ['团队协作与项目共享', '在线问卷收集系统', '项目设置面板与 API Key 本地配置', '更多统计方法（CB-SEM、fsQCA）'] },
+  { version: '长期规划', items: ['多语言支持', '行业模板库', '自动化报告分发', '组织级知识沉淀与复用'] },
 ];
 
 export function HomePage({ onOpenExample, onCreateNew }: {
@@ -40,7 +40,8 @@ export function HomePage({ onOpenExample, onCreateNew }: {
           </h1>
           <p className="text-[15px] text-notion-text-secondary mt-3 leading-relaxed">
             量研通帮助拥有丰富商业经验的管理者，用科学的量化方法验证商业直觉。
-            从描述业务痛点开始，到生成董事会级决策报告，所有复杂的统计分析都由系统自动完成。
+            从描述业务痛点开始，借助 AI 提示词协作、数据体检与结构化分析，
+            逐步完成从研究建模到商业决策验证的完整流程。
           </p>
         </div>
 
@@ -56,7 +57,7 @@ export function HomePage({ onOpenExample, onCreateNew }: {
               新建我的项目
             </h2>
             <p className="text-[13px] text-notion-text-secondary leading-relaxed">
-              从描述你的业务痛点开始，AI 帮你拆解研究模型、生成问卷、分析数据，直到产出决策报告。
+              从描述你的业务痛点开始，生成专业提示词，借助外部 AI 完成研究建模，再回到系统内完成问卷、数据体检与分析。
             </p>
             <ArrowRight className="absolute top-6 right-6 w-5 h-5 text-notion-text-tertiary group-hover:text-notion-text group-hover:translate-x-0.5 transition-all" />
           </button>
@@ -106,15 +107,15 @@ export function HomePage({ onOpenExample, onCreateNew }: {
             <div>
               <p className="text-[13px] font-medium text-notion-text">零统计学基础也能完成专业研究</p>
               <p className="text-[12px] text-notion-text-secondary mt-0.5 leading-relaxed">
-                量研通隐藏了所有复杂的统计参数，通过"红绿灯"体检、AI 提示词生成和商业语言报告，
-                让 DBA/MBA 高管无需理解 T值、Alpha 等概念，就能完成从业务直觉到数据验证的闭环。
+                量研通隐藏了复杂的统计参数，通过"红绿灯"体检、AI 提示词协作和商业化结果表达，
+                让 DBA / MBA 高管无需理解 T值、Alpha 等概念，也能完成从业务直觉到数据验证的闭环。
               </p>
             </div>
           </div>
         </div>
 
         <div className="border-t border-notion-border-light pt-10">
-          <p className="text-[11px] font-medium text-notion-text-tertiary uppercase tracking-wider mb-4">开发计划说明</p>
+          <p className="text-[11px] font-medium text-notion-text-tertiary uppercase tracking-wider mb-4">开发计划书</p>
           <div className="grid sm:grid-cols-3 gap-4">
             {ROADMAP.map(phase => (
               <div key={phase.version} className="p-4 bg-notion-bg-secondary rounded-lg">
@@ -131,7 +132,7 @@ export function HomePage({ onOpenExample, onCreateNew }: {
             ))}
           </div>
           <p className="text-[10px] text-notion-text-tertiary mt-4">
-            本系统采用纯本地运算架构，您的企业原始数据绝不会离开当前浏览器。
+            以下内容为尚未实现的后续规划。当前版本采用纯本地运算架构，您的企业原始数据绝不会离开当前浏览器。
           </p>
         </div>
       </main>

@@ -66,10 +66,12 @@ export interface SurveyResponse {
 }
 
 export type WorkflowStep =
+  | 'story'
   | 'overview'
   | 'research'
   | 'survey-design'
   | 'suggestions'
   | 'publish'
+  | 'traffic-light'
   | 'analysis'
   | 'report';

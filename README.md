@@ -28,6 +28,8 @@ This means:
 
 位于 [`docs/user/`](/tmp/SuveyTool4MBA-release/docs/user)
 
+- [系统说明报告（打印版）](/tmp/SuveyTool4MBA-release/docs/user/SYSTEM_REPORT_V2.md)
+  适合打印、汇报或一次性完整阅读，整合了系统概述、功能说明、使用流程和当前版本边界。
 - [系统功能说明书](/tmp/SuveyTool4MBA-release/docs/user/SYSTEM_FUNCTION_SPEC_V2.md)
   介绍当前版本已经实现了什么、适合谁使用、当前能力边界是什么。
 - [快速上手指南](/tmp/SuveyTool4MBA-release/docs/user/QUICK_START_GUIDE_V2.md)
@@ -74,6 +76,6 @@ This means:
 
 如果你是：
 
-- 用户：先看“快速上手指南”
-- 产品负责人：先看“系统功能说明书”
+- 用户：先看“系统说明报告（打印版）”或“快速上手指南”
+- 产品负责人：先看“系统说明报告（打印版）”
 - 新的 Bolt / AI agent / 开发接手方：先看“项目交接说明”与“开发协作规则”

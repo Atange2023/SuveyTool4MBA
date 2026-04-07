@@ -14,6 +14,7 @@
 
 包含文档：
 
+- [系统说明报告（打印版）](/tmp/SuveyTool4MBA-release/docs/user/SYSTEM_REPORT_V2.md)
 - [系统功能说明书](/tmp/SuveyTool4MBA-release/docs/user/SYSTEM_FUNCTION_SPEC_V2.md)
 - [快速上手指南](/tmp/SuveyTool4MBA-release/docs/user/QUICK_START_GUIDE_V2.md)
 
